@@ -4,6 +4,7 @@ import 'package:get/instance_manager.dart';
 import 'package:homecleaning/Components/button.dart';
 import 'package:homecleaning/Components/text_form_field.dart';
 import 'package:homecleaning/Theme/app_theme.dart';
+import 'package:homecleaning/api/api_service.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -124,8 +125,16 @@ class _SignInState extends State<SignIn> {
                   ],
                 ),
                 InkWell(
-                  onTap: () {
-                    if (formKey.currentState!.validate()) {   Get.toNamed('/start');}
+                  onTap: () async {
+                    try {
+                      await ApiService.login(
+                        userName: textEditingControllerEmail.text,
+                        password: textEditingControllerPassword.text,
+                      );
+                      Get.toNamed('/start');
+                    } catch (e) {
+                      Get.snackbar('Error', e.toString());
+                    }
                   },
                   child: AppButton(title: 'Sign In'),
                 ),

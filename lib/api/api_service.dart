@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 class ApiService {
   ApiService._();
 
-  static const String baseUrl = 'http://[::]:5000';
+  static const String baseUrl = 'http://localhost:5000';
   static String? token;
 
   static Future<void> register({
@@ -37,10 +37,7 @@ class ApiService {
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'userName': userName,
-        'password': password,
-      }),
+      body: jsonEncode({'userName': userName, 'password': password}),
     );
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
@@ -52,9 +49,10 @@ class ApiService {
 
   static Future<List<Service>> searchServices(String query) async {
     final url = Uri.parse('$baseUrl/api/Search/getservices?search=$query');
-    final response = await http.get(url, headers: {
-      if (token != null) 'Authorization': 'Bearer $token',
-    });
+    final response = await http.get(
+      url,
+      headers: {if (token != null) 'Authorization': 'Bearer $token'},
+    );
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body) as List<dynamic>;
       return data
@@ -88,9 +86,7 @@ class Service {
       id: json['id']?.toString() ?? '',
       name: json['name'],
       description: json['description'],
-      price: json['price'] == null
-          ? null
-          : (json['price'] as num).toDouble(),
+      price: json['price'] == null ? null : (json['price'] as num).toDouble(),
       category: json['category'],
       filename: json['filename'],
     );

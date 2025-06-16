@@ -4,6 +4,7 @@ import 'package:get/state_manager.dart';
 import 'package:homecleaning/Components/button.dart';
 import 'package:homecleaning/Components/text_form_field.dart';
 import 'package:homecleaning/Theme/app_theme.dart';
+import 'package:homecleaning/api/api_service.dart';
 
 class CreateAccount extends StatefulWidget {
   const CreateAccount({super.key});
@@ -156,10 +157,20 @@ class _CreateAccountState extends State<CreateAccount> {
                   ),
                 ],
               ),
-              InkWell(onTap: () {
-                   Get.toNamed('/completeProfile');
-              },
-                child: AppButton(title: 'Sign Up')),
+              InkWell(
+                  onTap: () async {
+                    try {
+                      await ApiService.register(
+                        userName: textEditingControllerName.text,
+                        email: textEditingControllerEmail.text,
+                        password: textEditingControllerPassword.text,
+                      );
+                      Get.toNamed('/completeProfile');
+                    } catch (e) {
+                      Get.snackbar('Error', e.toString());
+                    }
+                  },
+                  child: AppButton(title: 'Sign Up')),
 
               Row(
                 children: [
